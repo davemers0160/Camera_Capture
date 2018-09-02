@@ -312,6 +312,9 @@ int main(int argc, char** argv)
         DataLogStream << "X, Y, Width, Height: " << x_offset << ", " << y_offset << ", " << width << ", " << height << std::endl;
         DataLogStream << cam_properties << std::endl;
 
+        std::cout << "Root save location: " << output_save_location << std::endl;
+        std::cout << "------------------------------------------------------------------" << std::endl;
+
         //image = cv::imread("D:/IUPUI/Test_Data/Middlebury_Images_Third/Aloe/Illum2/Exp1/view1.png", cv::IMREAD_ANYCOLOR);
         //img_size = image.size();
 
@@ -371,7 +374,7 @@ int main(int argc, char** argv)
                     }
 
                     std::string combined_save_location = "";
-                    std::string sub_dir = "exp_" + num2str(shutter[idx], "%02.0f");
+                    std::string sub_dir = "exp_" + num2str(shutter[kdx], "%02.0f");
                     int32_t stat = make_dir(output_save_location, sub_dir);
                     if (stat != 1 && stat != (int32_t)ERROR_ALREADY_EXISTS)
                     {
@@ -380,7 +383,7 @@ int main(int argc, char** argv)
                     }
                     else
                     {
-                        combined_save_location = output_save_location + "/" + sub_dir + "/";
+                        combined_save_location = output_save_location + sub_dir + "/";
                     }
                     //sleep_ms(20);
 
