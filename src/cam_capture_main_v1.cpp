@@ -52,6 +52,7 @@ namespace FC2 = FlyCapture2;
 #include "num2string.h"
 #include "get_current_time.h"
 #include "file_parser.h"
+#include "make_dir.h"
 
 int main(int argc, char** argv)
 {    
@@ -369,7 +370,19 @@ int main(int argc, char** argv)
                         print_error(error);
                     }
 
-                    sleep_ms(20);
+                    std::string combined_save_location = "";
+                    std::string sub_dir = "exp_" + num2str(shutter[idx], "%02.0f");
+                    int32_t stat = make_dir(output_save_location, sub_dir);
+                    if (stat != 1 && stat != (int32_t)ERROR_ALREADY_EXISTS)
+                    {
+                        std::cout << "Error creating directory: " << stat << std::endl;
+                        combined_save_location = output_save_location;
+                    }
+                    else
+                    {
+                        combined_save_location = output_save_location + "/" + sub_dir + "/";
+                    }
+                    //sleep_ms(20);
 
                     shutter_str = num2str(cam_properties.shutter, "%2.2f_");
 
@@ -379,7 +392,7 @@ int main(int argc, char** argv)
 
                         ld.send_lens_packet(focus_packets[idx], lens_driver_handle);
                         std::string voltage_step = num2str(focus_packets[idx].data[0], "%03d_");
-                        std::string save_name = output_save_location + image_capture_name + voltage_step + shutter_str + num2str<uint64_t>(cam_serial_number, "%d_") + sdate + "_" + stime + ".png";
+                        std::string save_name = combined_save_location + image_capture_name + voltage_step + shutter_str + num2str<uint64_t>(cam_serial_number, "%d_") + sdate + "_" + stime + ".png";
                         std::cout << "Saving image to: " << save_name << std::endl;
                         DataLogStream << "Saving image to: " << save_name << std::endl;
 
