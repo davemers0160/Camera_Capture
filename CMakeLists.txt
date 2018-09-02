@@ -95,6 +95,7 @@ if(WIN32)
     # uncomment for MSVC and cmake greater than 3.6.0
     set(default_build_type "Release")
     if(MSVC AND (${CMAKE_VERSION} VERSION_GREATER "3.6.0"))
+        target_compile_options(${exe_name} PRIVATE "/MP")
         #set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} /MP)
         #set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} /MP)
         set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${exe_name})
