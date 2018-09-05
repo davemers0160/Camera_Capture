@@ -55,11 +55,11 @@ namespace FC2 = FlyCapture2;
 #include "make_dir.h"
 
 int main(int argc, char** argv)
-{    
+{
     uint32_t idx, jdx, kdx;
     uint8_t status;
     std::string console_input;
-
+    std::vector<double> range;
     std::ofstream DataLogStream;
 
     std::vector<ftdiDeviceDetails> ftdi_devices;
@@ -87,8 +87,8 @@ int main(int argc, char** argv)
     uint32_t cam_number = 0;
     uint32_t x_offset, y_offset, width, height;
     bool camera_on = true;
-    uint32_t avg_count = 21;
-    std::vector<double> shutter = { 60.0, 50.0, 40.0, 30.0, 20.0, 10.0 };
+    uint32_t avg_count = 19;
+    std::vector<double> shutter;
     std::string shutter_str;
 
     // OpenCV Variables
@@ -106,12 +106,16 @@ int main(int argc, char** argv)
     std::string output_save_location = "";
 
     const std::string params =
-        "{help h ?  |                   | Display Usage message }"
+        "{help h ?  |  | Display Usage message }"
         "{cfg_file  |  | Alternate input method to supply all parameters, all parameters must be included in the file }"
+        "{v_step    | 127:1:145 | voltage step range}"
         "{x_off     | 8 | X offset for camera }"
         "{y_off     | 4 | Y offset for camera }"
         "{width     | 1264 | Width of the captured image }"
         "{height    | 1020 | Height of the captured image }"
+        "{sharpness | 3072 | Sharpness setting for the camera }"
+        "{fps       | 10.0 | Frames per second setting for the camera }"
+        "{shutter   | 60:-10:10 | Shutter speed range settings for the camera }"
         "{output    | ../results/       | Output directory to save lidar images }"
         ;
 
@@ -125,6 +129,7 @@ int main(int argc, char** argv)
     }
 
     focus_packets.clear();
+    range.clear();
 
     // if the input is a config file use this over all other input parameters
     if (parser.has("cfg_file"))
@@ -134,21 +139,29 @@ int main(int argc, char** argv)
         std::vector<std::vector<std::string>> cfg_params;
         parseCSVFile(cfg_filename, cfg_params);
 
-        if (cfg_params.size() == 3)
+        // config file should be in the following format
+        // Line 1: colon separated values of the lens driver voltage step range (start:inc:stop)
+        // Line 2: comma separated values for the x offset, y offset, width, height of the camera
+        // Line 3: comma separated values for the camera properties: sharpness, fps, shutter range
+        // Line 4: base directory where the results will be saved
+        if (cfg_params.size() == 4)
         {
             // setup the focus level packets in a vector - later this will be an input configurable option
-            for (idx = 0; idx < cfg_params[0].size(); ++idx)
-            {
-                lens_step[0] = std::stoi(cfg_params[0][idx]);
-                focus_packets.push_back(lens_packet_struct(FAST_SET_VOLT, 1, lens_step));
-            }
+            parse_input_range(cfg_params[0][0], range);
 
             x_offset = std::stoi(cfg_params[1][0]);
             y_offset = std::stoi(cfg_params[1][1]);
             width = std::stoi(cfg_params[1][2]);
             height = std::stoi(cfg_params[1][3]);
 
-            output_save_location = cfg_params[2][0];
+            // camera properties settings
+            cam_properties.sharpness = std::stoi(cfg_params[2][0]);
+            cam_properties.fps = std::stof(cfg_params[2][1]);
+            parse_input_range(cfg_params[2][2], shutter);
+            cam_properties.shutter = shutter[0];
+
+            // output save location
+            output_save_location = cfg_params[3][0];
         }
         else
         {
@@ -159,23 +172,33 @@ int main(int argc, char** argv)
     }
     else
     {
-        for (idx = 0; idx <21; ++idx)
-        {
-            lens_step[0] = 128 + idx;
-            focus_packets.push_back(lens_packet_struct(FAST_SET_VOLT, 1, lens_step));
-        }
-
+        parse_input_range(parser.get<string>("v_step"), range);
         x_offset = parser.get<uint32_t>("x_off");		// 40
         y_offset = parser.get<uint32_t>("y_off");		// 228;
         width = parser.get<uint32_t>("width");		    // 1200;
         height = parser.get<uint32_t>("height");		// 720;
         
+        // camera properties settings
+        cam_properties.sharpness = parser.get<uint32_t>("sharpness");
+        cam_properties.fps = parser.get<float>("fps");
+        parse_input_range(parser.get<string>("shutter"), shutter);
+        cam_properties.shutter = shutter[0];
+
         output_save_location = parser.get<std::string>("output");
+    }
+
+    // convert the voltage step into a series of packets for the lens driver
+    for (idx = 0; idx < range.size(); ++idx)
+    {
+        focus_packets.push_back(lens_packet_struct(FAST_SET_VOLT, 1, { (uint8_t)range[idx] }));
     }
 
     path_check(output_save_location);
 
-    // run check on camera image settings to make sure that they are inbounds
+    // default camera properties
+    cam_properties.gain = 12.0;
+    cam_properties.auto_exp = 0.0;
+    cam_properties.brightness = 4.0;
 
     get_current_time(sdate, stime);
     log_filename = log_filename + sdate + "_" + stime + ".txt";
@@ -255,13 +278,10 @@ int main(int argc, char** argv)
             print_error(error);
         }
 
-        //std::cin.clear();
-
         // Initialize the camera
         error = init_camera(cam, cam_index, camera_config, cam_info);
         if (error == FC2::PGRERROR_OK)
         {
-            //std::cout << "Connected to camera!" << std::endl;
             std::cout << "------------------------------------------------------------------" << std::endl;
             std::cout << cam_info << std::endl;
             DataLogStream << cam_info << std::endl;
@@ -273,8 +293,6 @@ int main(int argc, char** argv)
             std::cin.ignore();
             return -1;
         }
-
-        //std::cout << "Configuring Camera!" << std::endl;
 
         error = config_imager_format(cam, x_offset, y_offset, width, height, pixelFormat);
         if (error != FC2::PGRERROR_OK)
@@ -288,18 +306,10 @@ int main(int argc, char** argv)
             print_error(error);
         }
 
-        cam_properties.sharpness = 3072;
-        cam_properties.shutter = shutter[0];
-        cam_properties.gain = 12.0;
-        cam_properties.auto_exp = 0.0;
-        cam_properties.brightness = 4.0;
-        cam_properties.fps = 10.0;
-
         error = config_camera_propeties(cam, cam_properties);
         if (error != FC2::PGRERROR_OK)
         {
             print_error(error);
-            //return -1;
         }
 
         img_size = cv::Size(width, height);
@@ -314,9 +324,6 @@ int main(int argc, char** argv)
 
         std::cout << "Root save location: " << output_save_location << std::endl;
         std::cout << "------------------------------------------------------------------" << std::endl;
-
-        //image = cv::imread("D:/IUPUI/Test_Data/Middlebury_Images_Third/Aloe/Illum2/Exp1/view1.png", cv::IMREAD_ANYCOLOR);
-        //img_size = image.size();
 
         cv::Mat sum_image = cv::Mat(img_size, CV_64FC3, cv::Scalar::all(0));
 
@@ -355,7 +362,7 @@ int main(int argc, char** argv)
             cv::namedWindow(image_window, cv::WindowFlags::WINDOW_NORMAL);
             cv::imshow(image_window, image);
 
-            key = cv::waitKey(70);
+            key = cv::waitKey(20);
 
             // check to save the image
             if (key == 's')

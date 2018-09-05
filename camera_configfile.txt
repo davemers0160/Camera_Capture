@@ -1,11 +1,19 @@
 # Camera configuration file
 # 
 # Parameters should be supplied in the following order:
-# 1. lens driver steps
-# 2. x offset, y offset, width, height
-# 3. save path
+# Line 1: colon separated values of the lens driver voltage step range (start:inc:stop)
+# Line 2: comma separated values for the x offset, y offset, width, height of the camera
+# Line 3: comma separated values for the camera properties: sharpness, fps, shutter range
+# Line 4: base directory where the results will be saved
 
-126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146
+127:1:145
 8, 4, 1264, 1020
+3072, 10, 60:-10:10
 ../results/
 
+#        cam_properties.sharpness = 3072;
+#        cam_properties.shutter = shutter[0];
+#        cam_properties.gain = 12.0;
+#        cam_properties.auto_exp = 0.0;
+#        cam_properties.brightness = 4.0;
+#        cam_properties.fps = 10.0;
