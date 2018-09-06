@@ -8,5 +8,5 @@
 
 127:1:145
 8, 4, 1264, 1020
-3072, 10, 60:-10:10
-D:/IUPUI/Test_Data/Real_World/Lab1/
+3072, 10, 20:-20:20
+D:/IUPUI/Test_Data/Real_World/Library1/left/

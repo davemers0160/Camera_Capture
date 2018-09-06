@@ -427,7 +427,7 @@ int main(int argc, char** argv)
                             }
 
                             cv::imshow(image_window, image);
-                            cv::waitKey(1);
+                            cv::waitKey(50);
 
                             cv::add(sum_image, image, sum_image, cv::Mat(), CV_64FC3);
 
@@ -445,8 +445,19 @@ int main(int argc, char** argv)
 
                 }   // end of kdx - shutter loop
 
-                ld.send_lens_packet(focus_packets[10], lens_driver_handle);
                 std::cout << "Saving Complete!" << std::endl << std::endl;
+
+                // reset the lens driver and camera back to thier initial values
+                ld.send_lens_packet(focus_packets[10], lens_driver_handle);
+
+                cam_properties.shutter = shutter[0];
+                // config Shutter to initial value and set to auto
+                config_property(cam, Shutter, FC2::SHUTTER, false, true, true);
+                error = set_abs_property(cam, Shutter, cam_properties.shutter);
+                if (error != FC2::PGRERROR_OK)
+                {
+                    print_error(error);
+                }
 
             }   // end of save 
 
