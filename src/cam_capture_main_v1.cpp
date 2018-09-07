@@ -116,6 +116,7 @@ int main(int argc, char** argv)
         "{sharpness | 3072 | Sharpness setting for the camera }"
         "{fps       | 10.0 | Frames per second setting for the camera }"
         "{shutter   | 60:-10:10 | Shutter speed range settings for the camera }"
+        "{avg       | 19 | Number of images to capture for an average }"
         "{output    | ../results/       | Output directory to save lidar images }"
         ;
 
@@ -144,7 +145,7 @@ int main(int argc, char** argv)
         // Line 2: comma separated values for the x offset, y offset, width, height of the camera
         // Line 3: comma separated values for the camera properties: sharpness, fps, shutter range
         // Line 4: base directory where the results will be saved
-        if (cfg_params.size() == 4)
+        if (cfg_params.size() == 5)
         {
             // setup the focus level packets in a vector - later this will be an input configurable option
             parse_input_range(cfg_params[0][0], range);
@@ -160,8 +161,10 @@ int main(int argc, char** argv)
             parse_input_range(cfg_params[2][2], shutter);
             cam_properties.shutter = shutter[0];
 
+            avg_count = std::stoi(cfg_params[3][0]);
+
             // output save location
-            output_save_location = cfg_params[3][0];
+            output_save_location = cfg_params[4][0];
         }
         else
         {
@@ -183,6 +186,8 @@ int main(int argc, char** argv)
         cam_properties.fps = parser.get<float>("fps");
         parse_input_range(parser.get<string>("shutter"), shutter);
         cam_properties.shutter = shutter[0];
+
+        avg_count = parser.get<uint32_t>("avg");
 
         output_save_location = parser.get<std::string>("output");
     }
@@ -217,8 +222,8 @@ int main(int argc, char** argv)
         ftdi_device_count = get_device_list(ftdi_devices);
         if (ftdi_device_count == 0)
         {
-            std::cout << "No ftdi devices found..." << std::endl;
-            DataLogStream << "No ftdi devices found..." << std::endl;
+            std::cout << "No ftdi devices found... Exiting!" << std::endl;
+            DataLogStream << "No ftdi devices found... Exiting!" << std::endl;
             std::cin.ignore();
             DataLogStream.close();
             return -1;
@@ -243,8 +248,8 @@ int main(int argc, char** argv)
 
         if (lens_driver_handle == NULL)
         {
-            std::cout << "No Lens Driver found... exiting!" << std::endl;
-            DataLogStream << "No Lens Driver found... exiting!" << std::endl;
+            std::cout << "No Lens Driver found... Exiting!" << std::endl;
+            DataLogStream << "No Lens Driver found... Exiting!" << std::endl;
             std::cin.ignore();
             DataLogStream.close();
             return -1;
@@ -258,8 +263,8 @@ int main(int argc, char** argv)
 
         if (status == false)
         {
-            std::cout << "Error communicating with lens driver." << std::endl;
-            DataLogStream << "Error communicating with lens driver." << std::endl;
+            std::cout << "Error communicating with lens driver... Exiting!" << std::endl;
+            DataLogStream << "Error communicating with lens driver... Exiting!" << std::endl;
             std::cin.ignore();
             DataLogStream.close();
             return -1;
@@ -316,11 +321,14 @@ int main(int argc, char** argv)
         std::cout << "------------------------------------------------------------------" << std::endl;
         std::cout << "X, Y, Width, Height: " << x_offset << ", " << y_offset << ", " << width << ", " << height << std::endl;
         std::cout << cam_properties;
+        std::cout << "Average Capture Number : " << avg_count << std::endl;
         std::cout << "------------------------------------------------------------------" << std::endl;
 
         DataLogStream << "------------------------------------------------------------------" << std::endl;
         DataLogStream << "X, Y, Width, Height: " << x_offset << ", " << y_offset << ", " << width << ", " << height << std::endl;
         DataLogStream << cam_properties << std::endl;
+        DataLogStream << "Average Capture Number : " << avg_count << std::endl;
+        DataLogStream << "------------------------------------------------------------------" << std::endl;
 
         std::cout << "Root save location: " << output_save_location << std::endl;
         std::cout << "------------------------------------------------------------------" << std::endl;
@@ -350,7 +358,8 @@ int main(int argc, char** argv)
             if (error != FC2::PGRERROR_OK)
             {
                 print_error(error);
-                cout << "Error firing software trigger" << endl;
+                std::cout << "Error firing software trigger" << std::endl;
+                DataLogStream << "Error firing software trigger" << std::endl;
             }
 
             error = get_image(cam, image);
@@ -386,6 +395,7 @@ int main(int argc, char** argv)
                     if (stat != 1 && stat != (int32_t)ERROR_ALREADY_EXISTS)
                     {
                         std::cout << "Error creating directory: " << stat << std::endl;
+                        DataLogStream << "Error creating directory: " << stat << std::endl;
                         combined_save_location = output_save_location;
                     }
                     else
@@ -418,6 +428,7 @@ int main(int argc, char** argv)
                             {
                                 print_error(error);
                                 std::cout << "Error firing software trigger" << std::endl;
+                                DataLogStream << "Error firing software trigger" << std::endl;
                             }
 
                             error = get_image(cam, image);
