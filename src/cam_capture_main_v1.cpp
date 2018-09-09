@@ -377,6 +377,7 @@ int main(int argc, char** argv)
             if (key == 's')
             {
                 get_current_time(sdate, stime);
+                ld.send_lens_packet(focus_packets[0], lens_driver_handle);
 
                 for (kdx = 0; kdx < shutter.size(); ++kdx)
                 {
@@ -402,13 +403,14 @@ int main(int argc, char** argv)
                     {
                         combined_save_location = output_save_location + sub_dir + "/";
                     }
-                    //sleep_ms(20);
+
+                    // sleep for a little to let the camera settle down
+                    sleep_ms(100);
 
                     shutter_str = num2str(cam_properties.shutter, "%2.2f_");
 
                     for (idx = 0; idx < focus_packets.size(); ++idx)
                     {
-
 
                         ld.send_lens_packet(focus_packets[idx], lens_driver_handle);
                         std::string voltage_step = num2str(focus_packets[idx].data[0], "%03d_");

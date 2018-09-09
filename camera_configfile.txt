@@ -10,5 +10,5 @@
 127:1:145
 8, 4, 1264, 1020
 3072, 10, 60:-10:10
-19
-D:/IUPUI/Test_Data/Real_World/Lab1/
+11
+../results/
