@@ -509,7 +509,7 @@ int main(int argc, char** argv)
     DataLogStream.close();
     cv::destroyAllWindows();
     std::cout << "Program Compete!" << std::endl;
-    std::cin.ignore();
+    //std::cin.ignore();
     return 0;
     
 }   // end of main

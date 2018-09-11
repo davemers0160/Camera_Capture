@@ -9,6 +9,6 @@
 
 127:1:145
 8, 4, 1264, 1020
-3072, 10, 4:-1:1
+3072, 10, 6:-1:1
 11
-D:/IUPUI/Test_Data/Real_World/Roof_Top1/left/
+D:/IUPUI/Test_Data/Real_World/Shed2/left/
