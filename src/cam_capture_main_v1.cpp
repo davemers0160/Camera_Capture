@@ -201,7 +201,7 @@ int main(int argc, char** argv)
     path_check(output_save_location);
 
     // default camera properties
-    cam_properties.gain = 12.0;
+    cam_properties.gain = 5.0;
     cam_properties.auto_exp = 0.0;
     cam_properties.brightness = 4.0;
 
