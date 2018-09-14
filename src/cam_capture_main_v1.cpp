@@ -98,7 +98,7 @@ int main(int argc, char** argv)
     std::string image_window = "Image";
     std::vector<int> compression_params;
     compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-    compression_params.push_back(8);
+    compression_params.push_back(1);
 
     std::string sdate, stime;
     std::string log_filename = "camera_capture_log_";
@@ -333,8 +333,6 @@ int main(int argc, char** argv)
         std::cout << "Root save location: " << output_save_location << std::endl;
         std::cout << "------------------------------------------------------------------" << std::endl;
 
-        cv::Mat sum_image = cv::Mat(img_size, CV_64FC3, cv::Scalar::all(0));
-
         std::cout << std::endl << "Press the following keys to perform actions:" << std::endl;
         std::cout << "  s - Save an image" << std::endl;
         std::cout << "  q - Quit" << std::endl;
@@ -411,12 +409,15 @@ int main(int argc, char** argv)
 
                     for (idx = 0; idx < focus_packets.size(); ++idx)
                     {
+                        cv::Mat sum_image = cv::Mat(img_size, CV_64FC3, cv::Scalar::all(0));
 
                         ld.send_lens_packet(focus_packets[idx], lens_driver_handle);
                         std::string voltage_step = num2str(focus_packets[idx].data[0], "%03d_");
                         std::string save_name = combined_save_location + image_capture_name + voltage_step + shutter_str + num2str<uint64_t>(cam_serial_number, "%d_") + sdate + "_" + stime + ".png";
                         std::cout << "Saving image to: " << save_name << std::endl;
-                        DataLogStream << "Saving image to: " << save_name << std::endl;
+                        DataLogStream << save_name << std::endl;
+
+                        std::vector<cv::Mat> cap_img;
 
                         std::cout << ":";
                         for (jdx = 0; jdx < avg_count; ++jdx)
@@ -440,13 +441,15 @@ int main(int argc, char** argv)
                             }
 
                             cv::imshow(image_window, image);
-                            cv::waitKey(50);
+                            cap_img.push_back(image.clone());
+                            cv::waitKey(20);
 
-                            cv::add(sum_image, image, sum_image, cv::Mat(), CV_64FC3);
+                            cv::add(cap_img[jdx], sum_image, sum_image, cv::Mat(), CV_64FC3);
 
                         }   // end of jdx - time averaging loop
 
                         std::cout << ":" << std::endl;
+
                         sum_image.convertTo(sum_image, CV_8UC3, (1.0 / (double)avg_count));
 
                         cv::imwrite(save_name, sum_image, compression_params);
