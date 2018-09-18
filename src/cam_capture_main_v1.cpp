@@ -116,7 +116,8 @@ int main(int argc, char** argv)
         "{sharpness | 3072 | Sharpness setting for the camera }"
         "{fps       | 10.0 | Frames per second setting for the camera }"
         "{shutter   | 60:-10:10 | Shutter speed range settings for the camera }"
-        "{avg       | 19 | Number of images to capture for an average }"
+        "{gain      | 5.0 | Inital gain setting before letting the camera find one }"
+        "{avg       | 11 | Number of images to capture for an average }"
         "{output    | ../results/       | Output directory to save lidar images }"
         ;
 
@@ -160,6 +161,7 @@ int main(int argc, char** argv)
             cam_properties.fps = std::stof(cfg_params[2][1]);
             parse_input_range(cfg_params[2][2], shutter);
             cam_properties.shutter = shutter[0];
+            cam_properties.gain = std::stof(cfg_params[2][3]);
 
             avg_count = std::stoi(cfg_params[3][0]);
 
@@ -186,6 +188,7 @@ int main(int argc, char** argv)
         cam_properties.fps = parser.get<float>("fps");
         parse_input_range(parser.get<string>("shutter"), shutter);
         cam_properties.shutter = shutter[0];
+        cam_properties.gain = parser.get<float>("gain");
 
         avg_count = parser.get<uint32_t>("avg");
 
@@ -201,7 +204,6 @@ int main(int argc, char** argv)
     path_check(output_save_location);
 
     // default camera properties
-    cam_properties.gain = 5.0;
     cam_properties.auto_exp = 0.0;
     cam_properties.brightness = 4.0;
 

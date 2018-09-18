@@ -9,6 +9,6 @@
 
 127:1:145
 8, 4, 1264, 1020
-3072, 10, 60:-10:10
+3072, 10, 60:-10:10, 4.0
 11
-D:/IUPUI/Test_Data/Real_World/Lab2/right/
+D:/IUPUI/Test_Data/Real_World/House2/right/
