@@ -323,13 +323,13 @@ int main(int argc, char** argv)
         std::cout << "------------------------------------------------------------------" << std::endl;
         std::cout << "X, Y, Width, Height: " << x_offset << ", " << y_offset << ", " << width << ", " << height << std::endl;
         std::cout << cam_properties;
-        std::cout << "Average Capture Number : " << avg_count << std::endl;
+        std::cout << "Average Capture Number:  " << avg_count << std::endl;
         std::cout << "------------------------------------------------------------------" << std::endl;
 
         DataLogStream << "------------------------------------------------------------------" << std::endl;
         DataLogStream << "X, Y, Width, Height: " << x_offset << ", " << y_offset << ", " << width << ", " << height << std::endl;
         DataLogStream << cam_properties << std::endl;
-        DataLogStream << "Average Capture Number : " << avg_count << std::endl;
+        DataLogStream << "Average Capture Number:  " << avg_count << std::endl;
         DataLogStream << "------------------------------------------------------------------" << std::endl;
 
         std::cout << "Root save location: " << output_save_location << std::endl;
