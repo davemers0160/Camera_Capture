@@ -8,10 +8,10 @@
 # Line 5: base directory where the results will be saved
 
 # outdoor
-#122:1:142
+122:1:142
 # indoor
-125:1:144
+#125:1:144
 8, 4, 1264, 1020
-3072, 10, 70:-10:10, 1.0
+3072, 10, 6:-1:1, 0.0
 11
-D:/IUPUI/Test_Data/Real_World/Auditorium2/right/
+D:/IUPUI/Test_Data/real_world_raw/Grass3/right/
