@@ -90,6 +90,7 @@ int main(int argc, char** argv)
     uint32_t avg_count = 19;
     std::vector<double> shutter;
     std::string shutter_str;
+    double cam_temp = 0.0;
 
     // OpenCV Variables
     char key;
@@ -290,8 +291,8 @@ int main(int argc, char** argv)
         if (error == FC2::PGRERROR_OK)
         {
             std::cout << "------------------------------------------------------------------" << std::endl;
-            std::cout << cam_info << std::endl;
-            DataLogStream << cam_info << std::endl;
+            std::cout << cam_info;
+            DataLogStream << cam_info;
             cam_serial_number = (uint64_t)cam_info.serialNumber;
         }
         else
@@ -300,6 +301,10 @@ int main(int argc, char** argv)
             std::cin.ignore();
             return -1;
         }
+
+        get_camera_temperature(cam, cam_temp);
+        std::cout << "  Camera Temperature:  " << cam_temp << std::endl;
+        DataLogStream << "  Camera Temperature:  " << cam_temp << std::endl << std::endl;
 
         error = config_imager_format(cam, x_offset, y_offset, width, height, pixelFormat);
         if (error != FC2::PGRERROR_OK)

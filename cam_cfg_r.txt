@@ -10,9 +10,9 @@
 # outdoor
 #122:1:142
 # indoor
-120:1:150
+122:1:148
 8, 4, 1264, 1020
-1600, 5, 70:-10:10, 12.0
+4095, 5, 80:-10:10, 10.0
 5
-D:/IUPUI/Test_Data/rw_raw2/s5/right/
+D:/IUPUI/Test_Data/rw_raw3/k20/right/
 #../results/
