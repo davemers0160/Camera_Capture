@@ -48,7 +48,7 @@ namespace FC2 = FlyCapture2;
 #include "lens_driver.h"
 
 // Custom Includes
-#include "path_check.h"
+//#include "path_check.h"
 #include "num2string.h"
 #include "get_current_time.h"
 #include "file_parser.h"
@@ -384,6 +384,8 @@ int main(int argc, char** argv)
                 get_current_time(sdate, stime);
                 ld.send_lens_packet(focus_packets[0], lens_driver_handle);
 
+                sleep_ms(100);
+
                 for (kdx = 0; kdx < shutter.size(); ++kdx)
                 {
                     cam_properties.shutter = shutter[kdx];
@@ -419,6 +421,8 @@ int main(int argc, char** argv)
                         cv::Mat sum_image = cv::Mat(img_size, CV_64FC3, cv::Scalar::all(0));
 
                         ld.send_lens_packet(focus_packets[idx], lens_driver_handle);
+                        sleep_ms(100);   // sleep for a little for the lens/camera to settle down
+
                         std::string voltage_step = num2str(focus_packets[idx].data[0], "%03d_");
                         std::string save_name = combined_save_location + image_capture_name + voltage_step + shutter_str + num2str<uint64_t>(cam_serial_number, "%d_") + sdate + "_" + stime + ".png";
                         std::cout << "Saving image to: " << save_name << std::endl;
