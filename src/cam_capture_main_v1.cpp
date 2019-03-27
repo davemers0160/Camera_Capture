@@ -438,17 +438,21 @@ int main(int argc, char** argv)
                             poll_trigger_ready(cam);
 
                             error = fire_software_trigger(cam);
-                            if (error != FC2::PGRERROR_OK)
-                            {
-                                print_error(error);
-                                std::cout << "Error firing software trigger" << std::endl;
-                                DataLogStream << "Error firing software trigger" << std::endl;
-                            }
-
                             error = get_image(cam, image);
                             if (error != FC2::PGRERROR_OK)
                             {
                                 print_error(error);
+                                std::cout << "Error firing software trigger and receiving image" << std::endl;
+                                DataLogStream << "Error firing software trigger and receiving image" << std::endl;
+                            }
+
+                            error = fire_software_trigger(cam);
+                            error = get_image(cam, image);      // double grab just to be sure the buffer has been flushed
+                            if (error != FC2::PGRERROR_OK)
+                            {
+                                print_error(error);
+                                std::cout << "Error firing software trigger and receiving image" << std::endl;
+                                DataLogStream << "Error firing software trigger and receiving image" << std::endl;
                             }
 
                             cv::imshow(image_window, image);
