@@ -13,7 +13,7 @@
 127:1:143
 272, 148, 736, 728
 #8, 4, 1264, 1020
-2500, 5, 50:-10:50, 8.0
+2500, 5, 70:-10:10, 8.0
 4
-D:/IUPUI/Test_Data/rw_raw4/align03/left/
+D:/IUPUI/Test_Data/rw_raw4/k64/left/
 #../results/
