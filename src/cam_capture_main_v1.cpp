@@ -278,7 +278,7 @@ int main(int argc, char** argv)
         DataLogStream << ld << std::endl;
         DataLogStream << "------------------------------------------------------------------" << std::endl;
 
-        ld.send_lens_packet(focus_packets[10], lens_driver_handle);
+        ld.send_lens_packet(focus_packets[(focus_packets.size()>>1)], lens_driver_handle);
 
         error = get_camera_selection(cam_index);
         if (error != FC2::PGRERROR_OK)
@@ -479,7 +479,7 @@ int main(int argc, char** argv)
                 std::cout << "Saving Complete!" << std::endl << std::endl;
 
                 // reset the lens driver and camera back to thier initial values
-                ld.send_lens_packet(focus_packets[10], lens_driver_handle);
+                ld.send_lens_packet(focus_packets[(focus_packets.size()>>1)], lens_driver_handle);
 
                 cam_properties.shutter = shutter[0];
                 // config Shutter to initial value and set to auto
