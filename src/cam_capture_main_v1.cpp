@@ -3,13 +3,12 @@
 // 
 // 
 //=============================================================================
+#define _CRT_SECURE_NO_WARNINGS
 
 // FTDI Driver Includes
-//#include "ftd2xx.h"
 #include "ftdi_functions.h"
 
 #if defined(_WIN32) | defined(__WIN32__) | defined(__WIN32) | defined(_WIN64) | defined(__WIN64)
-#define _CRT_SECURE_NO_WARNINGS					
 
 #ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.                   
 #define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
@@ -88,7 +87,7 @@ int main(int argc, char** argv)
     uint32_t x_offset, y_offset, width, height;
     bool camera_on = true;
     uint32_t avg_count = 19;
-    std::vector<double> shutter;
+    std::vector<float> shutter;
     std::string shutter_str;
     double cam_temp = 0.0;
 
@@ -140,7 +139,7 @@ int main(int argc, char** argv)
         // input config file should contain all required inputs
         std::string cfg_filename = parser.get<std::string>("cfg_file");
         std::vector<std::vector<std::string>> cfg_params;
-        parseCSVFile(cfg_filename, cfg_params);
+        parse_csv_file(cfg_filename, cfg_params);
 
         // config file should be in the following format
         // Line 1: colon separated values of the lens driver voltage step range (start:inc:stop)
@@ -158,11 +157,11 @@ int main(int argc, char** argv)
             height = std::stoi(cfg_params[1][3]);
 
             // camera properties settings
-            cam_properties.sharpness = std::stoi(cfg_params[2][0]);
-            cam_properties.fps = std::stof(cfg_params[2][1]);
+            cam_properties.sharpness = cam_prop<uint32_t>(std::stoi(cfg_params[2][0]), false, true, false);
+            cam_properties.fps = cam_prop<float>(std::stof(cfg_params[2][1]), false, true, true);
             parse_input_range(cfg_params[2][2], shutter);
-            cam_properties.shutter = shutter[0];
-            cam_properties.gain = std::stof(cfg_params[2][3]);
+            cam_properties.shutter = cam_prop<float>(shutter[0], false, true, true);
+            cam_properties.gain = cam_prop<float>(std::stof(cfg_params[2][3]), true, true, true);
 
             avg_count = std::stoi(cfg_params[3][0]);
 
@@ -185,11 +184,11 @@ int main(int argc, char** argv)
         height = parser.get<uint32_t>("height");		// 720;
         
         // camera properties settings
-        cam_properties.sharpness = parser.get<uint32_t>("sharpness");
-        cam_properties.fps = parser.get<float>("fps");
+        cam_properties.sharpness = cam_prop<uint32_t>(parser.get<uint32_t>("sharpness"), false, true, false);
+        cam_properties.fps = cam_prop<float>(parser.get<float>("fps"), false, true, true);
         parse_input_range(parser.get<string>("shutter"), shutter);
-        cam_properties.shutter = shutter[0];
-        cam_properties.gain = parser.get<float>("gain");
+        cam_properties.shutter = cam_prop<float>(shutter[0], false, true, true);
+        cam_properties.gain = cam_prop<float>(parser.get<float>("gain"), true, true, true);
 
         avg_count = parser.get<uint32_t>("avg");
 
@@ -205,8 +204,8 @@ int main(int argc, char** argv)
     path_check(output_save_location);
 
     // default camera properties
-    cam_properties.auto_exp = 0.0;
-    cam_properties.brightness = 4.0;
+    cam_properties.auto_exp = cam_prop<float>(0.0f, true, true, true);
+    cam_properties.brightness = cam_prop<float>(4.0f, true, true, true);
 
     get_current_time(sdate, stime);
     log_filename = log_filename + sdate + "_" + stime + ".txt";
@@ -215,9 +214,9 @@ int main(int argc, char** argv)
     DataLogStream.open((output_save_location + log_filename), ios::out | ios::app);
 
     // Add the date and time to the start of the log file
-    DataLogStream << "------------------------------------------------------------------" << std::endl;
-    DataLogStream << "Version: 1.0    Date: " << sdate << "    Time: " << stime << std::endl;
-    DataLogStream << "------------------------------------------------------------------" << std::endl;
+    DataLogStream << "#------------------------------------------------------------------" << std::endl;
+    DataLogStream << "Version: 2.0    Date: " << sdate << "    Time: " << stime << std::endl << std::endl;
+    DataLogStream << "#------------------------------------------------------------------" << std::endl;
 
 	try
     {
@@ -276,7 +275,7 @@ int main(int argc, char** argv)
         ld.set_lens_driver_info(ld.lens_rx);
         std::cout << ld << std::endl;
         DataLogStream << ld << std::endl;
-        DataLogStream << "------------------------------------------------------------------" << std::endl;
+        DataLogStream << "#------------------------------------------------------------------" << std::endl;
 
         ld.send_lens_packet(focus_packets[0], lens_driver_handle);
 
@@ -328,17 +327,18 @@ int main(int argc, char** argv)
         std::cout << "------------------------------------------------------------------" << std::endl;
         std::cout << "X, Y, Width, Height: " << x_offset << ", " << y_offset << ", " << width << ", " << height << std::endl;
         std::cout << cam_properties;
-        std::cout << "Average Capture Number:  " << avg_count << std::endl;
-        std::cout << "------------------------------------------------------------------" << std::endl;
+        std::cout << std::endl << "------------------------------------------------------------------" << std::endl;
+        std::cout << "Average Capture Number:  " << avg_count << std::endl << std::endl;
 
-        DataLogStream << "------------------------------------------------------------------" << std::endl;
+
+        DataLogStream << "#------------------------------------------------------------------" << std::endl;
         DataLogStream << "X, Y, Width, Height: " << x_offset << ", " << y_offset << ", " << width << ", " << height << std::endl;
         DataLogStream << cam_properties << std::endl;
-        DataLogStream << "Average Capture Number:  " << avg_count << std::endl;
-        DataLogStream << "------------------------------------------------------------------" << std::endl;
+        DataLogStream << std::endl << "#------------------------------------------------------------------" << std::endl;
+        DataLogStream << "Average Capture Number:  " << avg_count << std::endl << std::endl;
 
-        std::cout << "Root save location: " << output_save_location << std::endl;
         std::cout << "------------------------------------------------------------------" << std::endl;
+        std::cout << "Root save location: " << output_save_location << std::endl;
 
         std::cout << std::endl << "Press the following keys to perform actions:" << std::endl;
         std::cout << "  s - Save an image" << std::endl;
@@ -388,10 +388,10 @@ int main(int argc, char** argv)
 
                 for (kdx = 0; kdx < shutter.size(); ++kdx)
                 {
-                    cam_properties.shutter = shutter[kdx];
+                    cam_properties.shutter.value = shutter[kdx];
                     // config Shutter to initial value and set to auto
                     config_property(cam, Shutter, FC2::SHUTTER, false, true, true);
-                    error = set_abs_property(cam, Shutter, cam_properties.shutter);
+                    error = set_abs_property(cam, Shutter, cam_properties.shutter.value);
                     if (error != FC2::PGRERROR_OK)
                     {
                         print_error(error);
@@ -414,7 +414,7 @@ int main(int argc, char** argv)
                     // sleep for a little to let the camera settle down
                     sleep_ms(100);
 
-                    shutter_str = num2str(cam_properties.shutter, "%2.2f_");
+                    shutter_str = num2str(cam_properties.shutter.value, "%2.2f_");
 
                     for (idx = 0; idx < focus_packets.size(); ++idx)
                     {
@@ -471,7 +471,7 @@ int main(int argc, char** argv)
 
                     }   // end of idx - voltage step loop
 
-                    DataLogStream << "------------------------------------------------------------------" << std::endl;
+                    DataLogStream << "#------------------------------------------------------------------" << std::endl;
                     std::cout << "------------------------------------------------------------------" << std::endl;
 
                 }   // end of kdx - shutter loop
@@ -481,10 +481,10 @@ int main(int argc, char** argv)
                 // reset the lens driver and camera back to thier initial values
                 ld.send_lens_packet(focus_packets[0], lens_driver_handle);
 
-                cam_properties.shutter = shutter[0];
+                cam_properties.shutter.value = shutter[0];
                 // config Shutter to initial value and set to auto
                 config_property(cam, Shutter, FC2::SHUTTER, false, true, true);
-                error = set_abs_property(cam, Shutter, cam_properties.shutter);
+                error = set_abs_property(cam, Shutter, cam_properties.shutter.value);
                 if (error != FC2::PGRERROR_OK)
                 {
                     print_error(error);
