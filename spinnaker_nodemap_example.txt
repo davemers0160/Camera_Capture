@@ -1,0 +1,325 @@
+Spinnaker library version: 1.27.0.48
+
+*** PRINTING TRANSPORT LAYER DEVICE NODEMAP ***
+
+Root
+   Device Information
+      DeviceID: 18586052
+      Device Serial Number: 18586052
+      Device Vendor Name  : Point Grey Research
+      Device Model Name: Flea3 FL3-U3-120S3C
+      Device Type: U3V
+      Device Display Name: Point Grey Research Flea3 FL3-U3-12...
+      Device Access Status: OpenReadWrite
+      Device Version: FW:v2.19.3.04 FPGA:v2.02
+      Device Driver Version: PGRUSBCam.sys : 2.7.3.235
+      Device User ID:
+      Device Is Updater Mode: 0
+      DeviceInstanceId: USB\VID_1E10&PID_3300&MI_00\6&41C38...
+      Device Location: 0000.0014.0000.019.000.000.000.000....
+      Device Current Speed: SuperSpeed
+      GUI XML Source: Device
+      GUI XML Path: Input.xml
+      GenICam XML Source: Device
+      GenICam XML Path:
+      Device Is In U3V Protocol: 1
+
+   Device Control
+      Device Endianess Mechanism: Standard
+
+
+*** PRINTING TL STREAM NODEMAP ***
+
+Root
+   Stream Information
+      Stream ID  : 0
+      Stream Type: U3V
+      Total Buffer Count: 0
+
+   Buffer Handling Control
+      Manual Stream Buffer Count: 10
+      Resulting Stream Buffer Count: 10
+      Stream Buffer Count Max: 1333
+      Stream Buffer Count Mode: Auto
+      StreamDefaultBufferCount: 10
+      StreamDefaultBufferCountMax: 1333
+      StreamDefaultBufferCountMode: Auto
+      Stream Buffer Handling Mode: OldestFirst
+      CRC Check Enable: 0
+      Stream Block Transfer Size: 1048576
+
+   Stream Diagnostics
+      Failed Buffer Count: 0
+      Buffer Underrun Count: 0
+
+
+*** PRINTING GENICAM NODEMAP ***
+
+Root
+   Analog Control
+      Gain Selector: All
+            Gain: 0
+            Gain Auto: Continuous
+            Auto Gain Lower Limit: 0
+            Auto Gain Upper Limit: 24.5413
+      Gain Auto: Continuous
+      Gain: 0
+      Auto Gain Lower Limit: 0
+      Auto Gain Upper Limit: 24.5413
+      Black Level: 4.88281
+      Gamma: 1
+      Sharpness: 1024
+      Hue: 0
+      Saturation: 100
+      Balance Ratio Selector: Red
+         Balance Ratio Selector: Red
+            Balance Ratio: 1.10837
+         Balance Ratio Selector: Blue
+            Balance Ratio: 2.24091
+      Balance Ratio: 1.10837
+
+   Device Control
+      Vendor Name: Point Grey Research
+      Model Name: Flea3 FL3-U3-120S3C
+      Device Version: FW:v2.19.3.04 FPGA:v2.02
+      Device Serial Number: 18586052
+      Device ID: 18586052
+      Device User ID:
+      Device Gen Cp Version Major: 1
+      Device Gen CP Version Minor: 0
+      Family Name: GEN2-USB
+      U3V Device Capability
+         User Name Available: 1
+         Access Privilege Available: 0
+         Message Channel Supported: 1
+         Timestamp Supported: 1
+         String Encoding: 0
+         Family Register Available: 1
+         SBRM Supported: 1
+         Endianess Registers Supported: 1
+         Written Length Field Supported: 1
+
+      Timestamp: 0
+      Timestamp Increment: 125000
+      Sensor Description: Sony IMX172 (1/2.3" Color CMOS)
+      Device SVN Version: FW:298172 FPGA:297960
+      Device Firmware Version: 2.19.3.04
+      Device Scan Type: Areascan
+      Device Temperature: 27.75
+      Device Uptime: 159
+      Auto Function AOIs Control: Off
+         Auto Function AOIs Control: Off
+         Auto Function AOIs Control: On
+            Width: 0
+            Height: 0
+            Offset X: 0
+            Offset Y: 0
+      Device Max Throughput: 192000000
+      Device Link Throughput Limit: 192000000
+      Test Pending Ack: 0
+
+   Acquisition Control
+      Trigger Selector: FrameStart
+         Trigger Selector: FrameStart
+            Trigger Mode: Off
+            Trigger Source: Line0
+            Trigger Activation: FallingEdge
+            Trigger Delay: 0
+            Trigger Delay Enabled: 0
+         Trigger Selector: ExposureActive
+            Trigger Mode: Off
+            Trigger Source: Line0
+            Trigger Activation: FallingEdge
+            Trigger Delay: 0
+            Trigger Delay Enabled: 0
+      Trigger Mode: Off
+      Trigger Source: Line0
+      Trigger Activation: FallingEdge
+      Trigger Delay: 0
+      Trigger Delay Enabled: 0
+      Exposure Mode: Timed
+      Exposure Auto: Continuous
+      Exposure Time: 18740.9
+      Exposure Time Abs: 18740.9
+      Auto Exposure Lower Limit: 162.423
+      Auto Exposure Upper Limit: 66638.9
+      Exposure Compensation Auto: Continuous
+      Exposure Compensation: 1.41504
+      Auto Exposure Compensation Lower Limit: 0.415039
+      Auto Exposure Compensation Upper Limit: 2
+      Acquisition Mode: Continuous
+      Frame Rate Auto: Continuous
+      Acquisition Frame Rate Control Enabled: 1
+      Acquisition Frame Rate: 15
+      Acquisition Status Selector: FrameTriggerWait
+      Acquisition Status: 0
+      Single Frame Acquisition Mode: FreeRunning
+      High Dynamic Range Mode Enabled: 0
+
+   Image Format Control
+      Pixel Format: BayerRG8
+      Pixel Coding: Raw
+      Width: 4000
+      Height: 3000
+      Offset X: 0
+      Offset Y: 0
+      Sensor Width: 4096
+      Sensor Height: 2160
+      Max Width: 4000
+      Max Height: 3000
+      Video Mode: Mode0
+      Binning Horizontal: 1
+      Binning Vertical: 1
+      Reverse X: 0
+      Pixel Size: Bpp8
+      Pixel Color Filter: BayerRG
+      Pixel Dynamic Range Min: 0
+      Pixel Dynamic Range Max: 0
+      Test Image Selector: Off
+      Test Pattern: Off
+      PixelDefectControl
+         Defect Pixel Correction Type: FPGACorrection
+         Defect Pixel Correction Enable: 1
+         Defect Pixel Correction Test Mode: Off
+         Current Corrected Pixel Count: 33
+         Current Corrected Pixel Index: 0
+         Current Corrected Pixel Offset X: 3216
+         Current Corrected Pixel Offset Y: 44
+
+
+   User Set Control
+      Current User Set: 0
+      User Set Selector: Default
+         User Set Selector: Default
+         User Set Selector: UserSet1
+         User Set Selector: UserSet2
+      User Set Default: Default
+      Default User Set: Default
+
+   Data Flash Control
+      Data Flash Page Size: 256
+      Data Flash Page Count: 4096
+      Active Page Number: 0
+      Active Page Offset: 0
+      Active Page Value: 0x4f4b4656
+
+   Digital I/O Control
+      Line Selector: Line0
+         Line Selector: Line0
+            Line Mode: Input
+            Line Debouncer Time Raw: 0
+            Line Status: 0
+         Line Selector: Line1
+            Line Mode: Output
+            Line Source: ExposureActive
+            Line Inverter: 0
+            Strobe Delay: 0
+            Strobe Duration: 0
+            Line Status: 1
+         Line Selector: Line2
+            Line Mode: Input
+            Line Debouncer Time Raw: 0
+            Line Status: 1
+         Line Selector: Line3
+            Line Mode: Input
+            Line Debouncer Time Raw: 0
+            Line Status: 1
+      Line Mode: Input
+      Line Debouncer Time Raw: 0
+      Line Status: 0
+      Line Status All: 0xe
+      User Output Selector: UserOutputValue1
+         User Output Selector: UserOutputValue1
+         User Output Selector: UserOutputValue2
+         User Output Selector: UserOutputValue3
+
+   LUT Control
+      LUT Selector: Luminance
+         LUT Selector: Luminance
+            LUT Enable: 0
+      LUT Enable: 0
+
+   Transport Layer Control
+      Max Response Time: 480
+      Device Configuration High: 0
+      Device Configuration Low: 0
+      Message Channel: 0
+      Access Privilege: 0
+      U3V Version Major: 1
+      U3V Version Minor: 0
+      U3V Capability: 0
+      U3V SIRM Available: 1
+      U3V EIRM Available: 1
+      U3V IIDC2 Available: 0
+      U3V Capability High: 0
+      U3V Capability Low: 0
+      U3V Configuration High: 0
+      U3V Configuration Low: 0
+      Max Command Transfer Length: 1024
+      Max Ack Transfer Length: 1024
+      Number of Stream Channels: 1
+      Current Speed: SuperSpeed
+      TLParamsLocked: 0
+      Payload Size: 12000000
+      Transmit Failure Count: 0
+      USB3 Link Recovery Count: 0
+
+   Chunk Data Control
+      Chunk Mode Active: 0
+      Chunk Selector: FrameCounter
+         Chunk Selector: CRC
+            Chunk Enable: 0
+         Chunk Selector: FrameCounter
+            Chunk Enable: 0
+         Chunk Selector: OffsetX
+            Chunk Enable: 0
+         Chunk Selector: OffsetY
+            Chunk Enable: 0
+         Chunk Selector: Width
+            Chunk Enable: 0
+         Chunk Selector: Height
+            Chunk Enable: 0
+         Chunk Selector: ExposureTime
+            Chunk Enable: 0
+         Chunk Selector: Gain
+            Chunk Enable: 0
+         Chunk Selector: BlackLevel
+            Chunk Enable: 0
+         Chunk Selector: PixelFormat
+            Chunk Enable: 0
+         Chunk Selector: DynamicPixelRangeMin
+            Chunk Enable: 0
+         Chunk Selector: DynamicPixelRangeMax
+            Chunk Enable: 0
+         Chunk Selector: Timestamp
+            Chunk Enable: 0
+      Chunk Enable: 0
+
+   Event Control
+      Event Selector: ExposureEnd
+      Event Notification: Off
+      Event Exposure End Data
+
+      Event Test Data
+
+
+   Remove Parameter Limits
+      Parameter Selector: Gain
+         Parameter Selector: Gain
+            Remove Limits: 0
+      Remove Limits: 0
+
+   User Defined Values
+      User Defined Value Selector: Value1
+         User Defined Value Selector: Value1
+            User Defined Value: 0
+         User Defined Value Selector: Value2
+            User Defined Value: 0
+         User Defined Value Selector: Value3
+            User Defined Value: 0
+         User Defined Value Selector: Value4
+            User Defined Value: 0
+         User Defined Value Selector: Value5
+            User Defined Value: 0
+      User Defined Value: 0
+
